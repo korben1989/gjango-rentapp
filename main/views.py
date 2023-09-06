@@ -53,7 +53,7 @@ class SearchResultsView(ListView):
 
 class AddPropertyGoogleView(LoginRequiredMixin, CreateView):
     form_class = AddPropertyGoogleForm
-    template_name = 'main/add_property_google_form.html'
+    template_name = 'main/add_property_google_multiple_step_form.html'
     login_url = reverse_lazy("login")
     success_url = reverse_lazy('add-property')
 

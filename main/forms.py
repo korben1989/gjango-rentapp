@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.forms import models
 from .models import AddPropertyGoogle
+from crispy_forms.helper import FormHelper
 
 
 User = get_user_model()
@@ -16,6 +17,13 @@ class RegisterUserForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
+    def __init__(self, *args, **kwargs):
+        super(RegisterUserForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
+        for k, v in self.fields.items():
+            v.widget.attrs['placeholder'] = k.capitalize()
+
 
 class AddPropertyGoogleForm(models.ModelForm):
     class Meta:
@@ -23,11 +31,25 @@ class AddPropertyGoogleForm(models.ModelForm):
         fields = ('location', 'apartment_unit',
                   'property_type', 'city', 'state', 'postal_code', 'country')
 
+    def __init__(self, *args, **kwargs):
+        super(AddPropertyGoogleForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
+        for k, v in self.fields.items():
+            v.widget.attrs['placeholder'] = k.capitalize()
+
 
 class LoginUserForm(AuthenticationForm):
     email = forms.EmailField
     password = forms.PasswordInput
 
-    # def __init__(self, *args, **kwargs):
-    #     self.request = kwargs.pop('request', None)
-    #     super(LoginUserForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(LoginUserForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
+        for k, v in self.fields.items():
+            if k == 'username':
+                v.widget.attrs['placeholder'] = 'Email'
+            else:
+                v.widget.attrs['placeholder'] = k.capitalize()
+
