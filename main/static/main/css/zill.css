@@ -1,0 +1,40 @@
+/* Show it's not fixed to the top */
+body .search-page-container.map-on-left {
+    flex-direction: row-reverse;
+}
+
+body .search-page-container {
+    display: flex;
+    min-width: 320px;
+    height: 100%;
+}
+
+.double-column-only {
+    width: 750px;
+    flex: 0 0 750px;
+}
+
+.fgiidE {
+    padding: 0px 16px;
+}
+
+.fgiidE {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(286px, 1fr));
+    margin-bottom: 8px;
+    padding: 0px 10px;
+}
+
+.doa-doM {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    color: rgb(42, 42, 51);
+    -webkit-font-smoothing: antialiased;
+    text-transform: none;
+    font-family: "Open Sans", "Adjusted Arial", Tahoma, Geneva, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
