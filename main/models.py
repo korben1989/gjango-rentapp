@@ -19,13 +19,13 @@ class AddPropertyGoogle(models.Model):
         ('Single Family House', 'Single Family House'),
         ('Condominium', 'Condominium'),
         ('Townhouse', 'Townhouse'),
-        ('Mobile Home/ Manufactured Home', 'Mobile Home/ Manufactured Home')
+        ('Mobile Home / Manufactured Home', 'Mobile Home / Manufactured Home')
     ]
 
     location = models.CharField(max_length=600, blank=False)
     apartment_unit = models.CharField(max_length=50, blank=False)
     # total_units_in_the_building = models.IntegerField(blank=False)
-    property_type = models.CharField(max_length=30, choices=property_choises, default='')
+    property_type = models.CharField(max_length=31, choices=property_choises, default='')
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20)
@@ -37,3 +37,18 @@ class AddPropertyGoogle(models.Model):
 
     def __str__(self):
         return self.location
+
+# class PropertyInfo(models.Model):
+#     property = models.ForeignKey(AddPropertyGoogle, on_delete=models.CASCADE)
+#     title = models.CharField(max_length=255)
+#     price = models.PositiveIntegerField()
+#     description = models.TextField()
+
+
+class PropertyImages(models.Model):
+    image = models.ImageField(upload_to='photos/%d/%m/%Y')
+    property = models.ForeignKey(AddPropertyGoogle, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.property.user.email
+

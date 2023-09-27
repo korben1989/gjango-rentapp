@@ -164,30 +164,33 @@
     </div>
   </div>
 </nav>
+    {% block content %}
+    {% endblock %}
+<!--<main class="container">-->
 
-<main class="container">
 
 
-
-  <div class="bg-body-tertiary p-5 rounded">
-<!--    <h3>object_list</h3>-->
-    <ul>
-    {% for i in object_list %}
-      <li>
-        <div>
-        {{ i.location }}
-        {{ i.property_type }}
-        {{ i.apartment_unit }}
-        {{ i.total_units_in_the_building }}
-        </div>
-      </li>
-	{% endfor %}
-    </ul>
+<!--  <div class="bg-body-tertiary p-5 rounded">-->
+<!--&lt;!&ndash;    <h3>object_list</h3>&ndash;&gt;-->
+<!--    <ul>-->
+<!--    {% for i in object_list %}-->
+<!--      <li>-->
+<!--        <div>-->
+<!--          image: <img src="{{ i.image.url }}" alt="{{ i.property.location }}"/>-->
+<!--        location: {{ i.property.location }}-->
+<!--          city: {{ i.property.city }}-->
+<!--        property_type: {{ i.property.property_type }}-->
+<!--        apartment_unit: {{ i.apartment_unit }}-->
+<!--        postal_code: {{ i.property.postal_code }}-->
+<!--        </div>-->
+<!--      </li>-->
+<!--	{% endfor %}-->
+<!--    </ul>-->
 <!--    <p class="lead">This example is a quick exercise to illustrate how the top-aligned navbar works. As you scroll, this navbar remains in its original position and moves with the rest of the page.</p>-->
 <!--    <a class="btn btn-lg btn-primary" href="../components/navbar/" role="button">View navbar docs &raquo;</a>-->
-  </div>
-</main>
-<script src="{% static 'main/css/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+<!--  </div>-->
+<!--</main>-->
+<!--<script src="{% static 'main/css/assets/dist/js/bootstrap.bundle.min.js' %}"></script>-->
 
     </body>
 </html>

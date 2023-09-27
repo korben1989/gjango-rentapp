@@ -171,15 +171,20 @@
   </div>
 </nav>
 
+    {% block body %}
+	{% endblock %}
 <main class="container">
 <!--  <div class="geoHomepageHeroImage">sadadsad</div>-->
-
+  {% block container %}
+	{% endblock %}
   <div class="bg-body-tertiary p-5 rounded">
     {% block content %}
 	{% endblock %}
   </div>
 
 </main>
+    {% block script %}
+	{% endblock %}
 <script src="{% static 'main/css/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
 
     </body>

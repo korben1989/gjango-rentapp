@@ -1,15 +1,20 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
-from django.forms import models
-from .models import AddPropertyGoogle
+from django.core.validators import RegexValidator
+from django.forms import models, formset_factory, inlineformset_factory
+from .models import AddPropertyGoogle, PropertyImages
 from crispy_forms.helper import FormHelper
 
 
 User = get_user_model()
 class RegisterUserForm(UserCreationForm):
     username = forms.CharField()
-    email = forms.EmailField()
+    email = forms.EmailField(
+        validators=[RegexValidator(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.+_-]+\.[a-zA-Z]+$',
+        message='Put a valid email adress!')],
+        required=True
+    )
     password1 = forms.PasswordInput()
     password2 = forms.PasswordInput()
 
@@ -26,6 +31,8 @@ class RegisterUserForm(UserCreationForm):
 
 
 class AddPropertyGoogleForm(models.ModelForm):
+    images = forms.ImageField(required=True,
+                              widget=forms.FileInput(attrs={'allow_multiple_selected': True}))
     class Meta:
         model = AddPropertyGoogle
         fields = ('location', 'apartment_unit',
@@ -38,11 +45,13 @@ class AddPropertyGoogleForm(models.ModelForm):
         for k, v in self.fields.items():
             v.widget.attrs['placeholder'] = k.capitalize()
 
+class PropertyImagesForm(models.ModelForm):
+    class Meta:
+        model = PropertyImages
+        fields = ('image', )
+
 
 class LoginUserForm(AuthenticationForm):
-    email = forms.EmailField
-    password = forms.PasswordInput
-
     def __init__(self, *args, **kwargs):
         super(LoginUserForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
