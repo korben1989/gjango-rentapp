@@ -1,23 +1,35 @@
 {% load static %}
+
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-  <head><script src="main/js/color-modes.js"></script>
+  <head>
+    <script src="{% static 'main/css/assets/js/color-modes.js' %}"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.115.4">
-    <title>Signin Template · Bootstrap v5.3</title>
+    <title>{% block title %} {% endblock %}</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
+    {% block head %}
+    {% endblock %}
 
-    
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-static/">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-<link href="{% static 'main/css/assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
-    main/css/dist/js/bootstrap.bundle.min.js
+    <link href="{% static 'main/css/assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500"
+      rel="stylesheet"
+    />
+
+<!--    <link rel="stylesheet" type="text/css" href="{% static 'main/css/autocomplete_adress_form.css' %}" />-->
+    <script type="module" src="{% static 'main/js/autocomplete_adress_form.js' %}"></script>
 
     <style>
       .bd-placeholder-img {
@@ -93,11 +105,10 @@
       }
     </style>
 
-    
-    <!-- Custom styles for this template -->
-    <link href="sign-in.css" rel="stylesheet">
+
+    <link href="{% static 'main/css/sign-in.css' %}" rel="stylesheet">
   </head>
-  <body class="d-flex align-items-center py-4 bg-body-tertiary">
+  <body>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="check2" viewBox="0 0 16 16">
         <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -149,32 +160,39 @@
       </ul>
     </div>
 
-    
-<main class="form-signin w-100 m-auto">
-  <form>
-    <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-    <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-      <label for="floatingInput">Email address</label>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'index' %}">AHR</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      {% include 'includes/nav_bar_sign_in_log_out.html' %}
+          <a class="d-flex" href="{% url 'add-property' %}">Add a Property</a>
     </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-      <label for="floatingPassword">Password</label>
-    </div>
+  </div>
+</nav>
 
-    <div class="form-check text-start my-3">
-      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-      <label class="form-check-label" for="flexCheckDefault">
-        Remember me
-      </label>
-    </div>
-    <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-    <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2023</p>
-  </form>
+    {% block body %}
+    {% endblock %}
+
+<main class="container">
+  {% block main %}
+    {% endblock %}
+<div class="bg-body-tertiary p-5 rounded">
+  {% block content %}
+  {% endblock %}
+
+
+</div>
 </main>
-<script src="main/css/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'main/css/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <!-- Jquery mask -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     </body>
 </html>

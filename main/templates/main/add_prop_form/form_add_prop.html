@@ -1,0 +1,19 @@
+<main class="form-signin w-100 m-auto">
+  <form action="{% url 'login' %}" method="post" class="form-signin w-100 m-auto">
+    {% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal">Add your property</h1>
+
+    {% load crispy_forms_tags %}
+    <p>{{ form.images|as_crispy_field }}</p>
+    <p>{{ form.images|as_crispy_field }}</p>
+    <p><input class="form-control" id="ship-address" name="ship-address" required autocomplete="off" placeholder="Enter Location..."></p>
+    <p><input class="form-control" id="address2" name="address2" required placeholder="Apartment, unit, suite, or floor #"></p>
+    <p>{{ form.property_type|as_crispy_field }}</p>
+    <p><input class="form-control" id="locality" name="locality" required placeholder="City" style="width:100%!important"></p>
+    <p><input class="form-control" id="state" name="state" required placeholder="State/Province"></p>
+    <p><input class="form-control" id="postcode" name="postcode" required placeholder="Postal code"></p>
+    <p><input class="form-control" id="country" name="country" required placeholder="Country/Region"></p>
+      <button type="submit" class="btn btn-primary w-100 py-2">Save adress</button>
+
+  </form>
+</main>

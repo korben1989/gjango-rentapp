@@ -14,5 +14,5 @@ urlpatterns = [
     path('done', views.PassResetComplView.as_view(), name='password_reset_complete'),
     path('search', views.SearchResultsView.as_view(), name='search_results'),
     path('', views.HomePageView.as_view(), name='index'),
-    path('add-property', views.AddPropertyGoogleView.as_view(), name='add-property'),
+    path('add-property', views.AddPropertyView.as_view(), name='add-property'),
 ]

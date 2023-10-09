@@ -1,0 +1,205 @@
+{% extends 'main/add_prop_form/page_add_prop.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% block head %}
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <link href="{% static 'main/css/multiple_step_form_1.css' %}" rel="stylesheet">
+<!--        <script type="text/javascript" src="{% static 'main/js/preview_images.js' %}"></script>-->
+<!--        <script type="text/javascript" src="{% static 'main/js/preview_images_1.js' %}"></script>-->
+
+
+    {% endblock %}
+</head>
+<body>
+{% block content %}
+    <form class="" enctype="multipart/form-data" action="{% url 'add-property' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+
+        <div class="wrapper">
+            <div class="header">
+                <ul style="text-align: center;">
+                    <li class="active form_1_progessbar">
+                        <div>
+                            <p>1</p>
+                        </div>
+                    </li>
+                    <li class="form_2_progessbar">
+                        <div>
+                            <p>2</p>
+                        </div>
+                    </li>
+                    <li class="form_3_progessbar">
+                        <div>
+                            <p>3</p>
+                        </div>
+                    </li>
+                    <li class="form_4_progessbar">
+                        <div>
+                            <p>4</p>
+                        </div>
+                    </li>
+                    <li class="form_5_progessbar">
+                        <div>
+                            <p>5</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        <div class="form_wrap">
+            <div class="form_1 data_info">
+                <h3>Describe the property</h3>
+                    <div class="form_container">
+                        <div class="input_wrap">
+                            {{ form.title|as_crispy_field }}
+                            {{ form.property_description|as_crispy_field }}
+                            {{ form.phone|as_crispy_field }}
+                        </div>
+                    </div>
+            </div>
+            <div class="form_2 data_info" style="display: none;">
+                <h3>Add photos</h3>
+                <div class="form_container">
+                     <div class="input_wrap">
+                             <div id="target_div"></div>
+                             <p></p>
+                             <button class="btn btn-primary w-100 py-2" type="button" id="ifile">Add photo</button>
+                     </div>
+				</div>
+            </div>
+            <div class="form_3 data_info" style="display: none;">
+                <h3>Enter a location</h3>
+                <div class="form_container">
+                    <div class="input_wrap">
+						<p><input class="form-control" id="address" name="address" required autocomplete="off" placeholder="Address..."></p>
+					</div>
+					<div class="input_wrap">
+						<div class="row">
+                          <div class="col-6" style="margin: auto;"><input class="form-control" id="neighborhood" name="neighborhood" placeholder="Neighborhood"></div>
+                          <div class="col-6" style="margin: auto;"><input class="form-control" id="area" name="area" placeholder="Area"></div>
+                        </div>
+					</div>
+					<div class="input_wrap">
+						<input class="form-control" id="city" name="city" required placeholder="City" style="width:100%!important">
+					</div>
+                    <div class="input_wrap">
+						<div class="row">
+                          <div class="col-6" style="margin: auto;"><input class="form-control" id="state" name="state" required placeholder="State/Province"></div>
+                          <div class="col-6" style="margin: auto;"><input class="form-control" id="postcode" name="postcode" required placeholder="Postal code"></div>
+                        </div>
+					</div>
+                    <div class="input_wrap">
+                        <input class="form-control" id="location" name="location" required placeholder="location" style="width:100%!important; display:none;">
+                        <img class="powered-by-google"
+                        src="https://storage.googleapis.com/geo-devrel-public-buckets/powered_by_google_on_white.png"
+                        alt="Powered by Google"/>
+                    </div>
+				</div>
+            </div>
+            <div class="form_4 data_info" style="display: none;">
+                <h3>Property info</h3>
+                <div class="form_container">
+					<div class="input_wrap">
+						{{ form_info.property_type|as_crispy_field }}
+                        <div class="row">
+                            <div class="col-6" style="margin: auto;">{{ form_info.bedrooms|as_crispy_field }}</div>
+                            <div class="col-6" style="margin: auto;">{{ form_info.bathrooms|as_crispy_field }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" style="margin: auto;">{{ form.price|as_crispy_field }}</div>
+                            <div class="col-6" style="margin: auto;">{{ form_info.square_footage|as_crispy_field }}</div>
+                        </div>
+                        {{ form_info.HOA_dues|as_crispy_field }}
+                        {{ form_info.lease_terms|as_crispy_field }}
+                        <hr>
+                    <div class="input_wrap">
+                         <div id="target_div_1"></div>
+                         <p></p>
+                         <button class="btn btn-primary w-100 py-2" type="button" id="ifile_1">Add unit</button>
+                    </div>
+					</div>
+
+				</div>
+            </div>
+            <div class="form_5 data_info" style="display: none;">
+                <h3>Amenities</h3>
+                <div class="form_container">
+					<div class="input_wrap">
+                        <div class="row">
+                            <div class="col-6">{{ form_amenities.appliances|as_crispy_field }}</div>
+                            <div class="col-6">{{ form_amenities.floor_covering|as_crispy_field }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">{{ form_amenities.cooling_type|as_crispy_field }}</div>
+                            <div class="col-6">{{ form_amenities.heating_type|as_crispy_field }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">{{ form_amenities.outdoor_amenities|as_crispy_field }}</div>
+                            <div class="col-6">{{ form_amenities.rooms|as_crispy_field }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">{{ form_amenities.parking|as_crispy_field }}</div>
+                            <div class="col-6">{{ form_amenities.view|as_crispy_field }}</div>
+                        </div>
+					</div>
+
+				</div>
+            </div>
+        </div>
+	<div class="btns_wrap">
+		<div class="common_btns form_1_btns">
+			<button type="button" class="btn_next">Next <span class="icon"><ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
+		</div>
+		<div class="common_btns form_2_btns" style="display: none;">
+			<button type="button" class="btn_back"><span class="icon"><ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
+			<button type="button" class="btn_next">Next <span class="icon"><ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
+		</div>
+        <div class="common_btns form_3_btns" style="display: none;">
+			<button type="button" class="btn_back"><span class="icon"><ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
+			<button type="button" class="btn_next">Next <span class="icon"><ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
+		</div>
+        <div class="common_btns form_4_btns" style="display: none;">
+			<button type="button" class="btn_back"><span class="icon"><ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
+			<button type="button" class="btn_next">Next <span class="icon"><ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
+		</div>
+		<div class="common_btns form_5_btns" style="display: none;">
+			<button type="button" class="btn_back"><span class="icon"><ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
+			<button type="button" class="btn_done">Done</button>
+		</div>
+	</div>
+</div>
+
+<div class="modal_wrapper">
+<!--	<div class="shadow"></div>-->
+	<div class="success_wrap">
+<!--		<span class="modal_icon"><ion-icon name="checkmark-sharp"></ion-icon></span>-->
+<!--		<p>You have successfully completed the process.</p>-->
+	</div>
+</div>
+
+
+
+    </form>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACf9mNWhnS186h7DJ_PYkkti66mNeoGLA&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
+
+    <script src="{% static 'main/js/multiple_step_form.js' %}"></script>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- Jquery mask -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/javascript" src="{% static 'main/js/preview_images.js' %}"></script>
+    <script type="text/javascript" src="{% static 'main/js/preview_images_1.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'main/js/add_unit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'main/js/add_unit_prev_img.js' %}"></script>
+
+{% endblock %}
+</body>
+</html>

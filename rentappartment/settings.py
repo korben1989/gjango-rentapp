@@ -37,14 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'multiselectfield',
     'crispy_forms',
     'crispy_bootstrap5',
     'django_forms_bootstrap',
-
-
     'main',
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

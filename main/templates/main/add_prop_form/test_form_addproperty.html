@@ -1,0 +1,105 @@
+{% extends 'main/add_prop/page_add_prop.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+ Create your property
+{% endblock %}
+
+
+{% block content %}
+<main class="form-control" style="max-width:500px; margin: auto;">
+  <form class="" enctype="multipart/form-data"
+        action="{% url 'add-property' %}" method="post" autocomplete="off"
+  >
+    {% csrf_token %}
+      <p>{{ form.title|as_crispy_field }}</p>
+      <hr>
+      <div class="row">
+        <div class="col-6" style="margin: auto;">{{ form_image.images|as_crispy_field }}</div>
+        <div class="col-6" style="margin: auto;">{{ form_image.images|as_crispy_field }}</div>
+<!--        <div class="col-3" style="margin: auto;">{{ form_image.images|as_crispy_field }}</div>-->
+<!--        <div class="col-3" style="margin: auto;">{{ form_image.images|as_crispy_field }}</div>-->
+      </div>
+<!--      <div class="row">-->
+<!--        <div class="col-6" style="margin: auto;">{{ form_image.images|as_crispy_field }}</div>-->
+<!--        <div class="col-6" style="margin: auto;">{{ form_image.images|as_crispy_field }}</div>-->
+<!--      </div>-->
+<!--      <p>{{ form_image.images|as_crispy_field }}</p>-->
+<!--      <p>{{ form_image.images|as_crispy_field }}</p>-->
+
+        <hr>
+
+
+      <p><input class="form-control" id="address" name="address" required autocomplete="off" placeholder="Enter Location..."></p>
+      <div class="row">
+          <div class="col-6" style="margin: auto;"><input class="form-control" id="neighborhood" name="neighborhood" placeholder="Neighborhood"></div>
+          <div class="col-6" style="margin: auto;"><input class="form-control" id="area" name="area" placeholder="Area"></div>
+      </div>
+      <p></p>
+      <p><input class="form-control" id="city" name="city" required placeholder="City" style="width:100%!important"></p>
+      <div class="row">
+        <div class="col-6" style="margin: auto;"><input class="form-control" id="state" name="state" required placeholder="State/Province"></div>
+        <div class="col-6" style="margin: auto;"><input class="form-control" id="postcode" name="postcode" required placeholder="Postal code"></div>
+      </div>
+      <p></p>
+      <p><input class="form-control" id="location" name="location" required placeholder="location" style="width:100%!important; display:none;"></p>
+      <img
+      class="powered-by-google"
+      src="https://storage.googleapis.com/geo-devrel-public-buckets/powered_by_google_on_white.png"
+      alt="Powered by Google"
+      />
+
+      <hr>
+
+      <p>{{ form_info.property_type|as_crispy_field }}</p>
+      <div class="row">
+        <div class="col-6" style="margin: auto;">{{ form_info.bedrooms|as_crispy_field }}</div>
+        <div class="col-6" style="margin: auto;">{{ form_info.bathrooms|as_crispy_field }}</div>
+      </div>
+      <div class="row">
+        <div class="col-6" style="margin: auto;">{{ form.price|as_crispy_field }}</div>
+        <div class="col-6" style="margin: auto;">{{ form_info.square_footage|as_crispy_field }}</div>
+      </div>
+
+
+      <hr>
+      <p>{{ form.phone|as_crispy_field }}</p>
+      <p>{{ form.description|as_crispy_field }}</p>
+
+      <hr>
+
+      <button type="submit" class="btn btn-primary w-100 py-2">Save adress</button>
+
+
+    <!-- Reset button provided for development testing convenience.
+  Not recommended for user-facing forms due to risk of mis-click when aiming for Submit button. -->
+      <input type="reset" value="Clear form" style="margin-top:10px;"/>
+
+
+
+  </form>
+
+
+</main>
+
+
+    <!--
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises.
+      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACf9mNWhnS186h7DJ_PYkkti66mNeoGLA&callback=initAutocomplete&libraries=places&v=weekly"
+      defer
+    ></script>
+
+
+<!--AIzaSyACf9mNWhnS186h7DJ_PYkkti66mNeoGLA-->
+<!--AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg-->
+
+{% endblock %}
+
+

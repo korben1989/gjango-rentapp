@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
 
 :root{
-	--primary: #6b59d3;
-	--secondary: #bfc0c0;
+	--primary: #0d6efd;
+	--secondary: #827b7b;
 	--white: #fff;
 	--text-clr: #5b6475;
 	--header-clr: #25273d;
-	--next-btn-hover: #8577d2;
+	--next-btn-hover: #0a58ca;
 	--back-btn-hover: #8b8c8c;
 }
 
@@ -18,19 +18,11 @@
 	outline: none;
 	font-family: 'Open Sans', sans-serif;
 }
-
-body{
-	background: var(--primary);
-	color: var(--text-clr);
-	font-size: 16px;
-	position: relative;
-}
-
 .wrapper{
 	width: 750px;
 	max-width: 100%;
-	background: var(--white);
-	margin: 100px auto 0;
+	background: var(--bs-body-bg);
+	margin: 1px auto 0;
 	padding: 50px;
 	border-radius: 5px;
 }
@@ -96,10 +88,10 @@ body{
 	margin-bottom: 35px;
 }
 
-.wrapper .form_wrap h2{
+.wrapper .form_wrap h3{
 	color: var(--header-clr);
 	text-align: center;
-	text-transform: uppercase;
+	text-transform: none;
 	margin-bottom: 20px;
 }
 
@@ -233,7 +225,7 @@ body{
 }
 
 .modal_wrapper.active{
-	visibility: visible;
+	visibility: none;
 }
 
 .modal_wrapper.active .shadow{

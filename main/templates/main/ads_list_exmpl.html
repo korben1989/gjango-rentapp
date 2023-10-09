@@ -1,0 +1,92 @@
+{% extends 'main/ads_list.html' %}
+{% load static %}
+
+ {% block content %}
+<main>
+
+<!--  <section class="py-5 text-center container">-->
+<!--    <div class="row py-lg-5">-->
+<!--      <div class="col-lg-6 col-md-8 mx-auto">-->
+<!--        <p>-->
+<!--          <a href="#" class="btn btn-primary my-2">Main call to action</a>-->
+<!--          <a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </section>-->
+
+  <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for i in object_list %}
+          <div class="col">
+            <div class="card shadow-sm">
+<!--              <svg class="bd-placeholder-img card-img-top" width="100%" height="225"-->
+<!--                   xmlns="http://www.w3.org/2000/svg" role="img"-->
+<!--                   aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">-->
+                <img src="{{ i.image.url }}" height="225" alt="{{ i.property.location }}"/>
+
+<!--                {{ i.property.property_type }}-->
+<!--                {{ i.property.location }}-->
+<!--                {{ i.price }}-->
+<!--                {{ i.property.phone }}-->
+<!--                {{ i.id }}-->
+<!--                {{ i.property_id }}-->
+<!--                <title>{{ i.title }}</title>-->
+<!--                <rect width="100%" height="100%" fill="#55595c"/>-->
+<!--                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>-->
+<!--              </svg>-->
+              <div class="card-body">
+                  <h4>${{ i.price }}</h4>
+                <p class="card-text">{{ i.title }} | {{ i.property.location }}, {{ i.property.city }},
+                {{ i.property.state }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-body-secondary">{{ i.property.time_update }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<!--              image: <img src="{{ i.image.url }}" alt="{{ i.property.location }}"/>-->
+<!--              location: {{ i.property.location }}-->
+<!--              city: {{ i.property.city }}-->
+<!--              property_type: {{ i.property.property_type }}-->
+<!--              apartment_unit: {{ i.apartment_unit }}-->
+<!--              postal_code: {{ i.property.postal_code }}-->
+
+        {% endfor %}
+
+        </div>
+<!--          {{ object_list.query.where }}-->
+<!--          <nav class="py-5 text-center container">-->
+<!--            <ul>-->
+<!--              {% for p in paginator.page_range %}-->
+<!--                <a href="">{{ p }}</a>-->
+<!--              {%endfor%}-->
+<!--            </ul>-->
+<!--          </nav>-->
+
+      </div>
+  </div>
+
+
+
+</main>
+
+<footer class="text-body-secondary py-5">
+  <div class="container">
+    <p class="float-end mb-1">
+      <a href="#">Back to top</a>
+    </p>
+    <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+    <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="../getting-started/introduction/">getting started guide</a>.</p>
+  </div>
+</footer>
+<script src="{% static 'main/css/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+{% endblock %}
+
