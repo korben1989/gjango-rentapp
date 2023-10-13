@@ -4,11 +4,11 @@ $('#ifile_1').click(function () {
     // to a target_div div
     var input = $('<input/>')
                 .attr('type', "file")
-                .attr('name', "images")
+                .attr('name', "image_unit")
                 .attr('class', "form-control")
                 .attr('accept', "image/*")
                 .attr('onchange', "handleFiles1(this.files)")
-                .attr('id', "id_images");
+                .attr('id', "id_image_unit");
 
     //Create array of options to be added
     var array = ['Select bedrooms','Studio', '1 bed', '2 bed', '3 bed', '4 bed+'];

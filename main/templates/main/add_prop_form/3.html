@@ -10,10 +10,14 @@
     {% block head %}
         <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
         <link href="{% static 'main/css/multiple_step_form_1.css' %}" rel="stylesheet">
-<!--        <script type="text/javascript" src="{% static 'main/js/preview_images.js' %}"></script>-->
-<!--        <script type="text/javascript" src="{% static 'main/js/preview_images_1.js' %}"></script>-->
 
-
+        <style>
+            #map {
+  height: 250px;
+  width: 350px;
+  margin-bottom: 10px;
+}
+        </style>
     {% endblock %}
 </head>
 <body>
@@ -56,8 +60,12 @@
                 <h3>Describe the property</h3>
                     <div class="form_container">
                         <div class="input_wrap">
+                            <label class="req1" style="font-size:11px; text-align:left;">required*</label>
                             {{ form.title|as_crispy_field }}
+                            <p></p>
+                            <label class="req2" style="font-size:11px; text-align:left;">required*</label>
                             {{ form.property_description|as_crispy_field }}
+                            <label class="req3" style="font-size:11px; text-align:left;">required*</label>
                             {{ form.phone|as_crispy_field }}
                         </div>
                     </div>
@@ -66,9 +74,11 @@
                 <h3>Add photos</h3>
                 <div class="form_container">
                      <div class="input_wrap">
+                            <label class="req4" style="font-size:11px; text-align:left;">required*</label>
                              <div id="target_div"></div>
                              <p></p>
-                             <button class="btn btn-primary w-100 py-2" type="button" id="ifile">Add photo</button>
+                             <button style="width:100%;" class="btn btn-dark" type="button" id="ifile">Add photo</button>
+
                      </div>
 				</div>
             </div>
@@ -76,25 +86,42 @@
                 <h3>Enter a location</h3>
                 <div class="form_container">
                     <div class="input_wrap">
+                        <label class="req5" style="font-size:11px; text-align:left;">autofill required*</label>
 						<p><input class="form-control" id="address" name="address" required autocomplete="off" placeholder="Address..."></p>
 					</div>
 					<div class="input_wrap">
 						<div class="row">
-                          <div class="col-6" style="margin: auto;"><input class="form-control" id="neighborhood" name="neighborhood" placeholder="Neighborhood"></div>
-                          <div class="col-6" style="margin: auto;"><input class="form-control" id="area" name="area" placeholder="Area"></div>
+                          <div class="col-6" style="margin: auto;">
+                              <label style="font-size:11px; text-align:left;">not required*</label>
+                              <input class="form-control" id="neighborhood" name="neighborhood" placeholder="Neighborhood">
+                          </div>
+                          <div class="col-6" style="margin: auto;">
+                              <label style="font-size:11px; text-align:left;">not required*</label>
+                              <input class="form-control" id="area" name="area" placeholder="Area">
+                          </div>
                         </div>
 					</div>
 					<div class="input_wrap">
+                        <label class="req6" style="font-size:11px; text-align:left;">required*</label>
 						<input class="form-control" id="city" name="city" required placeholder="City" style="width:100%!important">
 					</div>
                     <div class="input_wrap">
 						<div class="row">
-                          <div class="col-6" style="margin: auto;"><input class="form-control" id="state" name="state" required placeholder="State/Province"></div>
-                          <div class="col-6" style="margin: auto;"><input class="form-control" id="postcode" name="postcode" required placeholder="Postal code"></div>
+                          <div class="col-6" style="margin: auto;">
+                              <label class="req7" style="font-size:11px; text-align:left;">required*</label>
+                              <input class="form-control" id="state" name="state" required placeholder="State/Province">
+                          </div>
+                            <div class="col-6" style="margin: auto;">
+                                <label class="req8" style="font-size:11px; text-align:left;">required*</label>
+                                <input class="form-control" id="postcode" name="postcode" required placeholder="Postal code">
+                            </div>
                         </div>
 					</div>
                     <div class="input_wrap">
                         <input class="form-control" id="location" name="location" required placeholder="location" style="width:100%!important; display:none;">
+                    </div>
+                    <div class="input_wrap">
+                        <div class="req17" id="map""></div>
                         <img class="powered-by-google"
                         src="https://storage.googleapis.com/geo-devrel-public-buckets/powered_by_google_on_white.png"
                         alt="Powered by Google"/>
@@ -105,23 +132,38 @@
                 <h3>Property info</h3>
                 <div class="form_container">
 					<div class="input_wrap">
+                         <label class="req9" style="font-size:11px; text-align:left;">required*</label>
 						{{ form_info.property_type|as_crispy_field }}
                         <div class="row">
-                            <div class="col-6" style="margin: auto;">{{ form_info.bedrooms|as_crispy_field }}</div>
-                            <div class="col-6" style="margin: auto;">{{ form_info.bathrooms|as_crispy_field }}</div>
+                            <div class="col-6" style="margin: auto;">
+                                 <label class="req10" style="font-size:11px; text-align:left;">required*</label>
+                                {{ form_info.bedrooms|as_crispy_field }}
+                            </div>
+                            <div class="col-6" style="margin: auto;">
+                                 <label class="req11" style="font-size:11px; text-align:left;">required*</label>
+                                {{ form_info.bathrooms|as_crispy_field }}
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-6" style="margin: auto;">{{ form.price|as_crispy_field }}</div>
-                            <div class="col-6" style="margin: auto;">{{ form_info.square_footage|as_crispy_field }}</div>
+                            <div class="col-6" style="margin: auto;">
+                                 <label class="req12" style="font-size:11px; text-align:left;">required*</label>
+                                {{ form.price|as_crispy_field }}
+                            </div>
+                            <div class="col-6" style="margin: auto;">
+                                 <label class="req13" style="font-size:11px; text-align:left;">required*</label>
+                                {{ form_info.square_footage|as_crispy_field }}
+                            </div>
                         </div>
+                         <label style="font-size:11px; text-align:left;">not required*</label>
                         {{ form_info.HOA_dues|as_crispy_field }}
+                         <label style="font-size:11px; text-align:left;">not required*</label>
                         {{ form_info.lease_terms|as_crispy_field }}
-                        <hr>
-                    <div class="input_wrap">
-                         <div id="target_div_1"></div>
-                         <p></p>
-                         <button class="btn btn-primary w-100 py-2" type="button" id="ifile_1">Add unit</button>
-                    </div>
+<!--                        <hr>-->
+<!--                    <div class="input_wrap">-->
+<!--                         <div id="target_div_1"></div>-->
+<!--                         <p></p>-->
+<!--                         <button class="btn btn-primary w-100 py-2" type="button" id="ifile_1">Add unit</button>-->
+<!--                    </div>-->
 					</div>
 
 				</div>
@@ -131,20 +173,50 @@
                 <div class="form_container">
 					<div class="input_wrap">
                         <div class="row">
-                            <div class="col-6">{{ form_amenities.appliances|as_crispy_field }}</div>
-                            <div class="col-6">{{ form_amenities.floor_covering|as_crispy_field }}</div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.appliances|as_crispy_field }}
+                            </div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.floor_covering|as_crispy_field }}
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">{{ form_amenities.cooling_type|as_crispy_field }}</div>
-                            <div class="col-6">{{ form_amenities.heating_type|as_crispy_field }}</div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.cooling_type|as_crispy_field }}
+                            </div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.heating_type|as_crispy_field }}
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">{{ form_amenities.outdoor_amenities|as_crispy_field }}</div>
-                            <div class="col-6">{{ form_amenities.rooms|as_crispy_field }}</div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.outdoor_amenities|as_crispy_field }}
+                            </div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.rooms|as_crispy_field }}
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">{{ form_amenities.parking|as_crispy_field }}</div>
-                            <div class="col-6">{{ form_amenities.view|as_crispy_field }}</div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.parking|as_crispy_field }}
+                            </div>
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.view|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label style="font-size:11px; text-align:left;">not required*</label>
+                                {{ form_amenities.pets|as_crispy_field }}
+                            </div>
                         </div>
 					</div>
 
@@ -185,20 +257,36 @@
 
 
     </form>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACf9mNWhnS186h7DJ_PYkkti66mNeoGLA&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
-
+    <!--  google api autocomplite  -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACf9mNWhnS186h7DJ_PYkkti66mNeoGLA&callback=initialize&libraries=places&v=weekly" defer></script>
+    <!--  автозаполнение формы адреса проживания и отображение метки на карте  -->
+    <script type="text/javascript" src="{% static 'main/js/initialize_autocomplete_address_and_map.js' %}"></script>
+<!--    <script src="{% static 'main/js/show_map_listener.js' %}"></script>-->
+    <!-- пошаговая форма, если шаг не заполнен по обязательным полям, подсвечивает красным поле и не дает перейти -->
     <script src="{% static 'main/js/multiple_step_form.js' %}"></script>
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <!-- Jquery mask -->
+    <!-- Jquery mask for phone number -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- создает див и инпутфайл отдельно для каждого изображения -->
     <script type="text/javascript" src="{% static 'main/js/preview_images.js' %}"></script>
+    <!-- создает кнопку закрыть и открывает автоматически инпутфайл для загрузки фото -->
     <script type="text/javascript" src="{% static 'main/js/preview_images_1.js' %}"></script>
+    <!-- отслеживает событие по кнопке 'Х' и удаляет все содержимое дива с инпутом, фото и кнопкой -->
+    <script type="text/javascript" src="{% static 'main/js/remove_preview_img.js' %}"></script>
+    <!-- отслеживает на заполненность полей и делает красным если не заполнены -->
+    <script type="text/javascript" src="{% static 'main/js/required_field_change_listener_on_step_form.js' %}"></script>
+    <!--    -->
+<!--    <script type="text/javascript" src="{% static 'main/js/map_api_key.js' %}"></script>-->
+<!--    <script type="text/javascript" src="{% static 'main/js/map_add_form_property.js' %}"></script>-->
 
-    <script type="text/javascript" src="{% static 'main/js/add_unit.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/add_unit_prev_img.js' %}"></script>
+
+
+<!--    <script type="text/javascript" src="{% static 'main/js/add_unit.js' %}"></script>-->
+<!--    <script type="text/javascript" src="{% static 'main/js/add_unit_prev_img.js' %}"></script>-->
+
 
 {% endblock %}
 </body>

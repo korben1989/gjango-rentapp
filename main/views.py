@@ -88,8 +88,8 @@ class AddPropertyView(LoginRequiredMixin, CreateView):
                                                             'form_image': form_image,
                                                             'form_address': form_address,
                                                             'form_amenities': form_amenities,
-                                                            'form_unit': form_unit,},
-                      )
+                                                            # 'form_unit': form_unit,
+                                                            })
 
     def post(self, request, *args, **kwargs):
         a = request.POST.copy()
@@ -101,9 +101,9 @@ class AddPropertyView(LoginRequiredMixin, CreateView):
 
         form_amenities = PropertyAmenitiesForm(a)
         form_info = PropertyInfoForm(a)
-        form_unit = PropertyAddUnitForm(a)
+        # form_unit = PropertyAddUnitForm(a, request.FILES)
 
-        if bound_form.is_valid() and form_unit.is_valid() and form_amenities.is_valid() \
+        if bound_form.is_valid() and form_amenities.is_valid() \
                 and form_info.is_valid() and form_address.is_valid() :
             new_obj = bound_form.save(commit=False)
             new_obj.user_id = request.user.id
@@ -119,9 +119,9 @@ class AddPropertyView(LoginRequiredMixin, CreateView):
             amenities_form.property_id = new_obj.id
             amenities_form.save()
 
-            unit_form = form_unit.save(commit=False)
-            unit_form.property_id = new_obj.id
-            unit_form.save()
+            # unit_form = form_unit.save(commit=False)
+            # unit_form.property_id = new_obj.id
+            # unit_form.save()
 
             info_form = form_info.save(commit=False)
             info_form.property_id = new_obj.id
@@ -136,7 +136,7 @@ class AddPropertyView(LoginRequiredMixin, CreateView):
                                                             'form_info': form_info,
                                                             'form_address': form_address,
                                                             'form_amenities': form_amenities,
-                                                            'form_unit': form_unit,
+                                                            # 'form_unit': form_unit,
                                                             })
 
 class RegisterUser(CreateView):

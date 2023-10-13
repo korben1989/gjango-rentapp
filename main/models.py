@@ -97,6 +97,12 @@ VIEW = (
     ('Water', 'Water'), ('None', 'None'),
 )
 
+PETS = (
+    ('No pets allowed', 'No pets allowed'),
+    ('Cats allowed', 'Cats allowed'),
+    ('Dogs allowed', 'Dogs allowed'),
+)
+
 class PropertyAmenities(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     appliances = MultiSelectField(choices=APPLIANCES, blank=True, max_length=108, default='')
@@ -107,6 +113,7 @@ class PropertyAmenities(models.Model):
     outdoor_amenities = MultiSelectField(choices=OUTDOOR_AMENITIES, blank=True, max_length=119, default='')
     parking = MultiSelectField(choices=PARKING, blank=True, max_length=72, default='')
     view = MultiSelectField(choices=VIEW, blank=True, max_length=72, default='')
+    pets = MultiSelectField(choices=PETS, blank=True, max_length=72, default='')
 
 
 property_choises = [
@@ -144,7 +151,7 @@ class PropertyInfo(models.Model):
     bathrooms = models.CharField(max_length=8, choices=bathrooms_choises, default='')
     square_footage = models.PositiveIntegerField()
     HOA_dues = models.PositiveIntegerField(blank=True, null=True)
-    lease_terms = models.TextField(max_length=600)
+    lease_terms = models.TextField(max_length=600, blank=True)
 
 
 class PropertyImages(models.Model):
@@ -156,10 +163,13 @@ class PropertyImages(models.Model):
 
 class PropertyAddUnit(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    title_unit = models.CharField(max_length=100)
-    bedrooms_unit = models.CharField(max_length=6, choices=bedrooms_choises, default='')
-    bathrooms_unit = models.CharField(max_length=8, choices=bathrooms_choises, default='')
-    square_footage_unit = models.PositiveIntegerField()
-    price_unit = models.PositiveIntegerField()
-    image_unit = models.ImageField(upload_to='photos/%Y/%m/%d')
+    title_unit = models.CharField(max_length=100, blank=True)
+    bedrooms_unit = models.CharField(max_length=6, choices=bedrooms_choises, default='', blank=True)
+    bathrooms_unit = models.CharField(max_length=8, choices=bathrooms_choises, default='', blank=True)
+    square_footage_unit = models.PositiveIntegerField(blank=True, null=True)
+    price_unit = models.PositiveIntegerField(blank=True, null=True)
+    image_unit = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
+
+    def __str__(self):
+        return self.title_unit
 

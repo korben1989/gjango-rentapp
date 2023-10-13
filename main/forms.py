@@ -75,7 +75,7 @@ class PropertyAmenitiesForm(models.ModelForm):
     class Meta:
         model = PropertyAmenities
         fields = ('appliances', 'floor_covering', 'cooling_type', 'heating_type', 'rooms',
-                  'outdoor_amenities', 'parking', 'view')
+                  'outdoor_amenities', 'parking', 'view', 'pets')
 
 
 class PropertyInfoForm(models.ModelForm):
