@@ -1,7 +1,7 @@
-from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetCompleteView
-from django.urls import path
+from django.urls import path, re_path, register_converter
 
 from . import views
+
 
 urlpatterns = [
     path('login', views.LoginUser.as_view(), name='login'),
@@ -12,7 +12,10 @@ urlpatterns = [
     path('confirm/<str:uidb64>/<str:token>', views.PassResetConfView.as_view(),
          name='password_reset_confirm'),
     path('done', views.PassResetComplView.as_view(), name='password_reset_complete'),
-    path('search', views.SearchResultsView.as_view(), name='search_results'),
-    path('', views.HomePageView.as_view(), name='index'),
     path('add-property', views.AddPropertyView.as_view(), name='add-property'),
+    path('', views.HomePageView.as_view(), name='index'),
+    # path('search', views.SearchResultsView.as_view(), name='search_results'),
+    path('search', views.search_results, name='search_results'),
+    path('404', views.SearchResultsView.as_view(), name='404'),
+
 ]

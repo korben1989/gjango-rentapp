@@ -7,7 +7,7 @@ var map, marker;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 11.2,
+      zoom: 12,
 //      center: {lat: 0, lng: 0},
       zoomControl: true,
       mapTypeControl: false,
@@ -57,7 +57,7 @@ function fillInAddress() {
     map.fitBounds(place.geometry.viewport);
   } else {
     map.setCenter(place.geometry.location);
-    map.setZoom(17);
+    map.setZoom(16);
   }
   if (!marker) {
     marker = new google.maps.Marker({

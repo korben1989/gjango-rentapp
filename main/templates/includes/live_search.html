@@ -1,16 +1,27 @@
 <form class="d-flex" role="search" action="{% url 'search_results' %}" method="get">
-  <input id="prod" name="q" class="form-control me-2" type="search" placeholder="Enter an adress, city or ZIP code" aria-label="Search">
-  <button class="btn btn-outline-success" type="submit">Search</button>
+  <input id="q" name="q" value="" type="search" class="form-control me-2" placeholder="Enter an adress, city or ZIP code" aria-label="Search">
+  <button id="but" class="btn btn-outline-success" type="submit">Search</button>
 </form>
-
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 <script>
 $( function() {
-  $( "#prod" ).autocomplete({
+  $( "#q" ).autocomplete({
     source: '{% url 'index' %}',
-    minLength: 2
+    minLength: 3
   });
+
+  $("#but").click(function(event) {
+    var str = $('#q').val();
+    var c = str.split(",").length;
+    var parts = str.toLowerCase().split(/[ ,]+/).join('-')
+    console.log(c)
+    $('#q').val(parts+'-'+c);
+        });
 } );
 </script>
+
+
+
+

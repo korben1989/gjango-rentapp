@@ -2,8 +2,10 @@
 
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-  <head><script src="{% static 'main/css/assets/js/color-modes.js' %}"></script>
+  <head>
+    <script src="{% static 'main/css/assets/js/color-modes.js' %}"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,12 +16,11 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-static/">
 
-    
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
     <link href="{% static 'main/css/assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
-
+    <link href="{% static 'main/css/live_search_1.css' %}" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <style>
       .bd-placeholder-img {
@@ -167,11 +168,11 @@
 </nav>
 
 <main class="container">
-<!--  <div class="geoHomepageHeroImage">sadadsad</div>-->
 
-  <div class="bg-body-tertiary p-5 rounded">
+  <div class="bg-body-tertiary p-5 rounded text-center">
     <h1>Аpartments and Homes for Rent</h1>
-    {% include 'includes/live_search.html' %}
+
+    {% include 'includes/live_search_1.html' %}
     <div>
     {% block content %}
 	{% endblock %}

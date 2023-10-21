@@ -1,7 +1,7 @@
 {% extends 'main/ads_list.html' %}
 {% load static %}
 
- {% block content2 %}
+ {% block content %}
 <main>
 
 <!--  <section class="py-5 text-center container">-->
@@ -18,7 +18,7 @@
   <div class="album py-5 bg-body-tertiary">
     <div class="container">
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         {% for i in object_list %}
           <div class="col">
             <div class="card shadow-sm">
@@ -40,12 +40,22 @@
               <div class="card-body">
                   <h4>${{ i.price }}/mo {{ i.bedrooms }}</h4>
                 <p class="card-text">
+<!--                    {% if i.bedrooms_unit %}-->
+<!--                        {{ i.price_unit }} | {{ i.bedrooms_unit }} -->
+                        <!-- включаем цикл и перебираем все юниты и выводим 2-3 шт price - bedrooms -->
+                    {% if i.bedrooms %}
+                        {{ bathrooms }} | {{ square_footage }}
+                    {% elif i.price %}
+                        {{ i.price }}
+                    {% endif %}
+                    <br>
                     {{ i.title }} | {{ i.address }},
                     {% if i.area %}
                         {{ i.area }},
                     {% elif i.neighborhood %}
                         {{ i.neighborhood }},
                     {% endif %}
+
                     {{ i.city }}, {{ i.state }}</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
@@ -83,8 +93,6 @@
 
 
 </main>
-{% endblock %}
-
 
 <footer class="text-body-secondary py-5">
   <div class="container">
@@ -96,4 +104,5 @@
   </div>
 </footer>
 <script src="{% static 'main/css/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+{% endblock %}
 

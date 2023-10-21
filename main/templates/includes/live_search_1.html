@@ -1,0 +1,17 @@
+{% load static %}
+
+<div class="w-100 text-center">
+  <form id="search-form" autocomplete="off">
+      {% csrf_token %}
+      <input type="text" id="search-input" class="p-1 w-50 search" placeholder="Enter an adress, city or ZIP code"
+      style="color: var(--bs-body-color); background-color: var(--bs-body-bg); border-radius: var(--bs-border-radius); border: var(--bs-border-width) solid var(--bs-border-color);"
+      >
+      <div id="results-box" class="result-card not-visible"></div>
+  </form>
+</div>
+<script src="{% static 'main/js/live_search_1.js' %}" defer></script>
+
+
+
+
+

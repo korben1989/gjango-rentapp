@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from multiselectfield import MultiSelectField
+from django.utils.text import slugify
 
 
 class User(AbstractUser):
@@ -22,8 +24,115 @@ class Property(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
 
+    slug = models.SlugField(max_length=255, unique=False)
+
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('property_title', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        # Сохранение полей модели при их отсутствии заполнения
+        if not self.slug:
+            self.slug = slugify(self, self.title)
+        super().save(*args, **kwargs)
+
+
+class States(models.Model):
+    parent = models.ForeignKey('self', on_delete=models.PROTECT, blank=True, null=True)
+    state_name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
+
+    def __str__(self):
+        return f'{self.state_name}'
+
+    def get_absolute_url(self):
+        return reverse('state_name', kwargs={'slug_state': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f'{self.state_name}')
+        super().save(*args, **kwargs)
+
+class Citys(models.Model):
+    city_name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
+    state = models.ForeignKey(States, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.city_name}'
+
+    def get_absolute_url(self):
+        return reverse('city_name', kwargs={'slug_city': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f'{self.city_name} {self.state}')
+        super().save(*args, **kwargs)
+
+class Areas(models.Model):
+    area_name = models.CharField(max_length=80, blank=True)
+    slug = models.SlugField(max_length=80, unique=True)
+    city = models.ForeignKey(Citys, on_delete=models.CASCADE)
+    state = models.ForeignKey(States, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.area_name}'
+
+    def get_absolute_url(self):
+        return reverse('area_name', kwargs={'slug_area': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f'{self.area_name} {self.city} {self.state}')
+        super().save(*args, **kwargs)
+
+class Neighborhoods(models.Model):
+    neighborhood_name = models.CharField(max_length=80, blank=True)
+    slug = models.SlugField(max_length=80, unique=True)
+    city = models.ForeignKey(Citys, on_delete=models.CASCADE)
+    area = models.ForeignKey(Areas, on_delete=models.CASCADE, blank=True, null=True)
+    state = models.ForeignKey(States, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.neighborhood_name}'
+
+    def get_absolute_url(self):
+        return reverse('neighborhood_name', kwargs={'slug_neighborhood': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            if self.neighborhood_name and self.area:
+                self.slug = slugify(f'{self.neighborhood_name} {self.area} {self.city} {self.state}')
+            elif self.neighborhood_name and not self.area:
+                self.slug = slugify(f'{self.neighborhood_name} {self.city} {self.state}')
+        super().save(*args, **kwargs)
+
+
+class Postcodes(models.Model):
+    postcode_name = models.CharField(max_length=80)
+    slug = models.SlugField(max_length=80, unique=True)
+
+    neighborhood = models.ForeignKey(Neighborhoods, on_delete=models.CASCADE, blank=True, null=True)
+    area = models.ForeignKey(Areas, on_delete=models.CASCADE,  blank=True, null=True)
+    city = models.ForeignKey(Citys, on_delete=models.CASCADE)
+    state = models.ForeignKey(States, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.postcode_name}'
+
+    def get_absolute_url(self):
+        return reverse('postcode_name', kwargs={'slug_postcode': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            if self.area:
+                self.slug = slugify(f'{self.area} {self.city} {self.state} {self.postcode_name} ')
+            else:
+                self.slug = slugify(f'{self.city} {self.state} {self.postcode_name} ')
+        super().save(*args, **kwargs)
+
 
 class PropertyAddress(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
@@ -35,6 +144,25 @@ class PropertyAddress(models.Model):
     postcode = models.CharField(max_length=20)
     latitude = models.CharField(max_length=15)
     longitude = models.CharField(max_length=15)
+
+    states = models.ForeignKey(States, on_delete=models.SET_NULL, null=True)
+    citys = models.ForeignKey(Citys, on_delete=models.SET_NULL, null=True)
+    areas = models.ForeignKey(Areas, on_delete=models.SET_NULL, blank=True, null=True)
+    neighborhoods = models.ForeignKey(Neighborhoods, on_delete=models.SET_NULL, blank=True, null=True)
+    postcodes = models.ForeignKey(Postcodes, on_delete=models.SET_NULL, null=True)
+
+    slug = models.SlugField(max_length=255, unique=True)
+    def __str__(self):
+        return f'{self.address}'
+
+    def get_absolute_url(self):
+        return reverse('property_address', kwargs={'slug_address': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f'{self.address} {self.neighborhood} '
+                                f'{self.area} {self.city} {self.state} {self.postcode} {self.property}')
+        super().save(*args, **kwargs)
 
 
 APPLIANCES = (
@@ -115,7 +243,6 @@ class PropertyAmenities(models.Model):
     view = MultiSelectField(choices=VIEW, blank=True, max_length=72, default='')
     pets = MultiSelectField(choices=PETS, blank=True, max_length=72, default='')
 
-
 property_choises = [
         (None, 'Select house type'),
         ('Appartment', 'Appartment'),
@@ -152,6 +279,8 @@ class PropertyInfo(models.Model):
     square_footage = models.PositiveIntegerField()
     HOA_dues = models.PositiveIntegerField(blank=True, null=True)
     lease_terms = models.TextField(max_length=600, blank=True)
+
+
 
 
 class PropertyImages(models.Model):

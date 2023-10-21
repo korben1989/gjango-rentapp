@@ -90,7 +90,7 @@
 }
 
 .wrapper .form_wrap h3{
-	color: var(--header-clr);
+	color: var(--bs-heading-color);
 	text-align: center;
 	text-transform: none;
 	margin-bottom: 20px;
