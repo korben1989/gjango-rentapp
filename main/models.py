@@ -142,8 +142,8 @@ class PropertyAddress(models.Model):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=50)
     postcode = models.CharField(max_length=20)
-    latitude = models.CharField(max_length=15)
-    longitude = models.CharField(max_length=15)
+    latitude = models.CharField(max_length=50)
+    longitude = models.CharField(max_length=50)
 
     states = models.ForeignKey(States, on_delete=models.SET_NULL, null=True)
     citys = models.ForeignKey(Citys, on_delete=models.SET_NULL, null=True)
@@ -160,8 +160,17 @@ class PropertyAddress(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f'{self.address} {self.neighborhood} '
-                                f'{self.area} {self.city} {self.state} {self.postcode} {self.property}')
+            if self.area and self.neighborhood:
+                self.slug = slugify(f'{self.address} {self.neighborhood} '
+                                    f'{self.area} {self.city} {self.state} {self.postcode} {self.property}')
+            elif self.neighborhood and not self.area:
+                self.slug = slugify(f'{self.address} {self.neighborhood} '
+                                    f'{self.city} {self.state} {self.postcode} {self.property}')
+            elif self.area and not self.neighborhood:
+                self.slug = slugify(f'{self.address} {self.area} '
+                                    f'{self.city} {self.state} {self.postcode} {self.property}')
+            else:
+                self.slug = slugify(f'{self.address} {self.city} {self.state} {self.postcode} {self.property}')
         super().save(*args, **kwargs)
 
 

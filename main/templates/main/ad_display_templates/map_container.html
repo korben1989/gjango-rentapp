@@ -86,7 +86,12 @@ window.initMap = initMap;
 
   <div class="album py-5 bg-body-tertiary" style="padding-top:0px!important">
     <div class="container">
-
+        <h3>{{ obj.slug }}</h3>
+        {% for i in obj1 %}
+            {{ i }}
+            {{ i.city }}
+            {{ i.state }}
+        {% endfor %}
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
         {% for i in object_list %}
           <div class="col">

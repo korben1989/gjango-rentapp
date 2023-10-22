@@ -16,6 +16,7 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='index'),
     # path('search', views.SearchResultsView.as_view(), name='search_results'),
     path('search', views.search_results, name='search_results'),
+    path('<slug>', views.result_view, name='results_view'),
     path('404', views.SearchResultsView.as_view(), name='404'),
 
 ]

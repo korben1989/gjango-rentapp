@@ -2,7 +2,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.db.models import Q, Prefetch
 from django.http import JsonResponse, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,147 +12,64 @@ from .forms import RegisterUserForm, PropertyForm, LoginUserForm, PropertyInfoFo
 from .models import Property, User, PropertyImages, PropertyAddress, PropertyInfo, Citys, States, Areas, Neighborhoods, \
     Postcodes
 
+from collections import Counter
+
 
 # живой поиск на главной странице
 class HomePageView(TemplateView):
     template_name = 'main/main.html'
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        if 'term' in request.GET:
-            # по введенному в поиск значению берем данные по городам и почтовым кодам
-            req = request.GET['term']
-            qs = PropertyAddress.objects.filter(Q(address__icontains=request.GET.get('term'))
-                                     | Q(neighborhood__icontains=request.GET.get('term'))
-                                     | Q(area__icontains=request.GET.get('term'))
-                                     | Q(city__icontains=request.GET.get('term'))
-                                     | Q(state__icontains=request.GET.get('term'))
-                                     | Q(postcode__icontains=request.GET.get('term')))
-
-            # если в поиске почтовый код
-            names_code = list(set([f'{i.postcode}' for i in qs if req in i.postcode]))
-            if names_code:
-                return JsonResponse(names_code, safe=False)
-
-            # если в поиске город
-            names_city = list(set([f'{i.city}, {i.state}' for i in qs if req.lower() in i.city.lower()]))
-            if names_city:
-                return JsonResponse(names_city, safe=False)
-
-            # если в поиске район
-            names_area = list(set([f'{i.area}, {i.city}, {i.state}' for i in qs if req.lower() in i.area.lower()]))
-            if names_area:
-                return JsonResponse(names_area, safe=False)
-
-            # если в поиске соседи
-            names_neighborhood = list(set([f'{i.neighborhood}, {i.city}, {i.state}' for i in qs if req.lower() in i.neighborhood.lower()]))
-            if names_neighborhood:
-                return JsonResponse(names_neighborhood, safe=False)
-
-            # если в поиске адресс
-            names_address = list(
-                set([f'{i.address}, {i.area}, {i.city}, {i.state}, {i.postcode}' for i in qs if req.lower() in i.address.lower()]))
-            names_address1 = [i.replace(' ,', '').strip() for i in names_address]
-            if names_address:
-                return JsonResponse(names_address1, safe=False)
-
-        return self.render_to_response(context)
+def result_view(request, slug):
+    obj = get_object_or_404(Postcodes, slug=slug)
+    obj1 = PropertyAddress.objects.filter(postcode__icontains=obj)
+    return render(request, 'main/ad_display_templates/map_container.html', {'obj': obj, 'obj1': obj1})
 
 def search_results(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         res = None
         location = request.POST.get('location')
-        print(location)
-        qs = PropertyAddress.objects.filter(Q(postcode__icontains=location)| Q(city__icontains=location) |
-                                            Q(area__icontains=location) | Q(neighborhood__icontains=location) |
-                                            Q(address__icontains=location))
-        if len(qs) > 0 and len(location) > 0:
-            # names_code = list(set([f'{i.postcode}' for i in qs if location in i.postcode]))
-            # names_code = [f'{i.postcode}' for i in names_code if location in i.postcode]
-            names_code1 = [{'pk': i.pk, 'postcode': i.postcode} for i in qs if location in i.postcode]
-            res = names_code1
-            if names_code1:
-                return JsonResponse({'data': res})
 
+        qs_postcode = PropertyAddress.objects.filter(postcode__icontains=location).distinct('postcode')
+        if len(qs_postcode) > 0 and len(location) > 0:
+            names_code = [{'postcode': i.postcode, 'slug': i.postcodes.slug} for i in qs_postcode if location in i.postcode]
+            res = names_code
+            return JsonResponse({'data': res})
+
+        qs_city = PropertyAddress.objects.filter(city__icontains=location).distinct('city')
+        if len(qs_city) > 0 and len(location) > 0:
+            names_city = [{'city': f'{i.city}, {i.state}', 'slug': i.citys.slug} for i in qs_city if
+                          location.lower() in i.city.lower()]
+            res = names_city
+            return JsonResponse({'data': res})
+
+        qs_area = PropertyAddress.objects.filter(area__icontains=location).distinct('area')
+        if len(qs_area) > 0 and len(location) > 0:
+            names_area = [{'area': f'{i.area}, {i.city}, {i.state}', 'slug': i.areas.slug} for i in qs_area if
+                          location.lower() in i.area.lower()]
+            res = names_area
+            return JsonResponse({'data': res})
+
+        qs_neighborhood = PropertyAddress.objects.filter(neighborhood__icontains=location).distinct('neighborhood')
+        if len(qs_neighborhood) > 0 and len(location) > 0:
+            names_neighborhood = [{'neighborhood': f'{i.neighborhood}, {i.city}, {i.state}', 'slug': i.neighborhoods.slug}
+                                  for i in qs_neighborhood if location.lower() in i.neighborhood.lower()]
+            res = names_neighborhood
+            return JsonResponse({'data': res})
+
+        qs_address = PropertyAddress.objects.filter(address__icontains=location)
+        if len(qs_address) > 0 and len(location) > 0:
+            names_address = [{'address': f'{i.address}, {i.area}, {i.city}, {i.state}, {i.postcode}', 'slug': i.slug}
+                              if i.area else {'address': f'{i.address}, {i.city}, {i.state}, {i.postcode}', 'slug': i.slug} for i in qs_address if location.lower() in i.address.lower()]
+            res = names_address
+            return JsonResponse({'data': res})
 
         else:
             res = 'No results ...'
         return JsonResponse({'data': res})
     return JsonResponse({})
-def raw_sql_search_result_address(query):
-    return """SELECT DISTINCT main_propertyimages.property_id as id, 
-        images, price, title, 
-        address, neighborhood, area, city, state, postcode, latitude, longitude,
-        bedrooms, bathrooms, square_footage, property_type,
-        price_unit, bedrooms_unit
-        FROM main_property
-        LEFT JOIN main_propertyimages on main_property.id = main_propertyimages.property_id
-        LEFT JOIN main_propertyinfo on main_propertyimages.property_id = main_propertyinfo.property_id
-        LEFT JOIN main_propertyaddress on main_propertyinfo.property_id = main_propertyaddress.property_id
-        LEFT JOIN main_propertyaddunit on main_propertyaddress.property_id = main_propertyaddunit.property_id
-        LEFT JOIN main_propertyamenities on main_propertyaddunit.property_id = main_propertyamenities.property_id
-        
-        WHERE  address == %(address)s AND city = %(city)s
-         AND state = %(state)s AND postcode = %(postcode)s
-        GROUP by 1
-        ORDER by time_update desc""", query
-
-def raw_sql_search_result_neighborhood_area(query):
-    return """SELECT DISTINCT main_propertyimages.property_id as id, 
-        images, price, title, 
-        address, neighborhood, area, city, state, postcode, latitude, longitude,
-        bedrooms, bathrooms, square_footage, property_type,
-        price_unit, bedrooms_unit
-        FROM main_property
-        LEFT JOIN main_propertyimages on main_property.id = main_propertyimages.property_id
-        LEFT JOIN main_propertyinfo on main_propertyimages.property_id = main_propertyinfo.property_id
-        LEFT JOIN main_propertyaddress on main_propertyinfo.property_id = main_propertyaddress.property_id
-        LEFT JOIN main_propertyaddunit on main_propertyaddress.property_id = main_propertyaddunit.property_id
-        LEFT JOIN main_propertyamenities on main_propertyaddunit.property_id = main_propertyamenities.property_id
-        
-        WHERE  (neighborhood == %(neighborhood_area)s or area == %(neighborhood_area)s) 
-         AND city = %(city)s AND state = %(state)s
-        GROUP by 1
-        ORDER by time_update desc""", query
-
-def raw_sql_search_result_city(query):
-    return """SELECT DISTINCT main_propertyimages.property_id as id,
-        images, price, title,
-        address, neighborhood, area, city, state, postcode, latitude, longitude,
-        bedrooms, bathrooms, square_footage, property_type,
-        price_unit, bedrooms_unit
-        FROM main_property
-        LEFT JOIN main_propertyimages on main_property.id = main_propertyimages.property_id
-        LEFT JOIN main_propertyinfo on main_propertyimages.property_id = main_propertyinfo.property_id
-        LEFT JOIN main_propertyaddress on main_propertyinfo.property_id = main_propertyaddress.property_id
-        LEFT JOIN main_propertyaddunit on main_propertyaddress.property_id = main_propertyaddunit.property_id
-        LEFT JOIN main_propertyamenities on main_propertyaddunit.property_id = main_propertyamenities.property_id
-
-        WHERE  city = %(city)s AND state = %(state)s
-        GROUP by 1
-        ORDER by time_update desc""", query
-
-def raw_sql_search_result_postcode(query):
-    return """SELECT DISTINCT main_propertyimages.property_id as id,
-        images, price, title,
-        address, neighborhood, area, city, state, postcode, latitude, longitude,
-        bedrooms, bathrooms, square_footage, property_type,
-        price_unit, bedrooms_unit
-        FROM main_property
-        LEFT JOIN main_propertyimages on main_property.id = main_propertyimages.property_id
-        LEFT JOIN main_propertyinfo on main_propertyimages.property_id = main_propertyinfo.property_id
-        LEFT JOIN main_propertyaddress on main_propertyinfo.property_id = main_propertyaddress.property_id
-        LEFT JOIN main_propertyaddunit on main_propertyaddress.property_id = main_propertyaddunit.property_id
-        LEFT JOIN main_propertyamenities on main_propertyaddunit.property_id = main_propertyamenities.property_id
-
-        WHERE  postcode = %(postcode)s
-        GROUP by 1
-        ORDER by time_update desc""", query
-
 
 class SearchResultsView(ListView):
     paginate_by = 2
-
 
     def get_template_names(self):
         if self.request.GET.get('q') == '':
@@ -315,16 +232,34 @@ class AddPropertyView(LoginRequiredMixin, CreateView):
                 st_name, ct_name = a['state'].upper(), a['city'].title()
                 state = States.objects.get_or_create(state_name=st_name)
                 city = Citys.objects.get_or_create(city_name=ct_name, state=state[0])
+                merg = None
 
                 if a['neighborhood'] and a['area']:
                     area = Areas.objects.get_or_create(area_name=a['area'].title(), city=city[0], state=state[0])
-                    neighborhood = Neighborhoods.objects.get_or_create(neighborhood_name=a['neighborhood'].title(),
+                    if ct_name in a['neighborhood']:
+                        merged_lst = a['neighborhood'].split(' ') + ct_name.split(' ')
+                        c = Counter(merged_lst)
+                        res = [x for x in merged_lst if c[x] == 1 and len(x) > 2]
+                        # res = list(filter(lambda x: c[x] == 1, merged_lst))
+                        merg = ' '.join(res).title()
+                        neighborhood = Neighborhoods.objects.get_or_create(neighborhood_name=merg.title(),
+                                                                           area=area[0], city=city[0], state=state[0])
+                    else:
+                        neighborhood = Neighborhoods.objects.get_or_create(neighborhood_name=a['neighborhood'].title(),
                                                                        area=area[0], city=city[0], state=state[0])
                     postcode = Postcodes.objects.get_or_create(postcode_name=a['postcode'], area=area[0], city=city[0],
                                                                state=state[0])
                 elif a['neighborhood'] and not a['area']:
-                    neighborhood = Neighborhoods.objects.get_or_create(neighborhood_name=a['neighborhood'].title(),
-                                                                       city=city[0], state=state[0])
+                    if ct_name in a['neighborhood']:
+                        merged_lst = a['neighborhood'].split(' ') + ct_name.split(' ')
+                        c = Counter(merged_lst)
+                        res = [x.strip() for x in merged_lst if c[x] == 1 and len(x) > 2]
+                        merg = ' '.join(res).title()
+                        neighborhood = Neighborhoods.objects.get_or_create(neighborhood_name=merg.title(),
+                                                                           city=city[0], state=state[0])
+                    else:
+                        neighborhood = Neighborhoods.objects.get_or_create(neighborhood_name=a['neighborhood'].title(),
+                                                                           city=city[0], state=state[0])
                     postcode = Postcodes.objects.get_or_create(postcode_name=a['postcode'], city=city[0], state=state[0])
                 elif not a['neighborhood'] and a['area']:
                     area = Areas.objects.get_or_create(area_name=a['area'].title(), city=city[0], state=state[0])
@@ -337,6 +272,9 @@ class AddPropertyView(LoginRequiredMixin, CreateView):
                 form_address.latitude = a['location'][1:-2].split(',')[0]
                 form_address.longitude = a['location'][1:-2].split(',')[1]
                 form_address.property_id = new_obj.id
+                form_address.city = form_address.city.title()
+                if merg:
+                    form_address.neighborhood = merg
 
                 # сохраняю и привязываю к основному адресу
                 form_address.states = state[0]

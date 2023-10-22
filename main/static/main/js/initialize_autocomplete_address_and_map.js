@@ -26,20 +26,24 @@ function initMap() {
     //  postal_code: 'short_name'
     //};
 
-let address1Field;
-let address2Field;
-let address3Field;
+let addressField;
+let neighborhoodField;
+let areaField;
+let cityField;
+let stateField;
 let postalField;
 let locationField;
 function initAutocomplete() {
-    address1Field = document.querySelector("#address");
-    address2Field = document.querySelector("#area");
-    address3Field = document.querySelector("#neighborhood");
+    addressField = document.querySelector("#address");
+    neighborhoodField = document.querySelector("#neighborhood");
+    areaField = document.querySelector("#area");
+    cityField = document.querySelector("#city");
+    stateField = document.querySelector("#state");
     postalField = document.querySelector("#postcode");
     locationField = document.querySelector("#location");
   // Create the autocomplete object, restricting the search to geographical
   // location types.
-  autocomplete = new google.maps.places.Autocomplete(address1Field, {
+  autocomplete = new google.maps.places.Autocomplete(addressField, {
     componentRestrictions: { country: ["us"] },
     fields: ["address_components", "geometry"],
     types: ["address"],
@@ -71,9 +75,11 @@ function fillInAddress() {
   });
 
 
-  let address1 = "";
-  let address2 = "";
-  let address3 = "";
+  let address = "";
+  let neighborhood = "";
+  let area = "";
+  let city = "";
+  let state = "";
   let postcode = "";
   let location = "";
 
@@ -85,24 +91,27 @@ function fillInAddress() {
     // @ts-ignore remove once typings fixed
     const componentType = component.types[0];
 
+//    console.log(componentType)
+
     switch (componentType) {
       case "street_number": {
-        address1 = `${component.long_name} ${address1}`;
+        address = `${component.long_name} ${address}`;
         break;
       }
 
       case "route": {
-        address1 += component.short_name;
-        break;
-      }
-
-       case "sublocality_level_1": {
-        address2 = `${component.long_name} ${address2}`;
+        address += component.short_name;
         break;
       }
 
       case "neighborhood": {
-        address3 = `${component.long_name} ${address3}`;
+        neighborhood = `${component.long_name}${neighborhood}`;
+//        console.log(neighborhood)
+        break;
+      }
+
+      case "sublocality_level_1": {
+        area = `${component.long_name}${area}`;
         break;
       }
 
@@ -111,12 +120,20 @@ function fillInAddress() {
         break;
       }
 
-      case "postal_code_suffix": {
-        postcode = `${postcode}-${component.long_name}`;
-        break;
-      }
+//      case "postal_code_suffix": {
+//        postcode = `${postcode}-${component.long_name}`;
+//        break;
+//      }
+
+//      case "administrative_area_level_2":{
+//        administrative_area_level_2 = `${component.long_name}`;
+//        console.log(administrative_area_level_2)
+//        break;
+//        }
 
       case "locality":
+//        city = `${component.long_name}${city}`;
+//        console.log(city)
         document.querySelector("#city").value = component.long_name;
         break;
 
@@ -124,16 +141,15 @@ function fillInAddress() {
         document.querySelector("#state").value = component.short_name;
         break;
       }
-//      case "country":
-//        document.querySelector("#country").value = component.long_name;
-//        break;
+
     }
   }
 
 
-  address1Field.value = address1;
-  address2Field.value = address2;
-  address3Field.value = address3;
+  addressField.value = address;
+  neighborhoodField.value = neighborhood;
+  areaField.value = area;
+//  cityField.value = city;
   postalField.value = postcode;
 
   locationField.value = place.geometry.location;
